@@ -31,7 +31,7 @@ public class EmailImapFetch {
         Folder[] allFolder = defaultFolder.list();
         for (Folder value : allFolder) {
             System.out.println("文件夹 = " + value.getFullName());
-            folder = (IMAPFolder)store.getFolder("INBOX");
+            folder = (IMAPFolder)store.getFolder(value.getFullName());
             folder.open(Folder.READ_ONLY);
             int size = folder.getMessageCount();
             System.out.println("数目： "+size);
@@ -60,6 +60,7 @@ public class EmailImapFetch {
                         System.out.println("get mail error, error mail NO." + count +" ,retry count is: " + retry_count);
                     }
                 }
+                retry_count = 0;
             }
         }
     }
