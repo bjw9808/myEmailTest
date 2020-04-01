@@ -25,37 +25,40 @@ public class EmailImapFetch {
         session.setDebug(false);
         IMAPFolder folder= null;
         IMAPStore store=null;
-        store=(IMAPStore)session.getStore("imap");  // 使用imap会话机制，连接服务器
+        store=(IMAPStore)session.getStore("imap");
         store.connect(host,993,username,password);
-        folder = (IMAPFolder)store.getFolder("INBOX"); //收件箱
         Folder defaultFolder = store.getDefaultFolder();
         Folder[] allFolder = defaultFolder.list();
         for (Folder value : allFolder) {
             System.out.println("文件夹 = " + value.getFullName());
-        }
-        folder.open(Folder.READ_ONLY);
-        int size = folder.getMessageCount();
-        System.out.println("数目： "+size);
-        Message[] mess=folder.getMessages();
-        int count = 0;
-        for (Message msg: mess) {
-            Thread.sleep(1000);
-            while (true) {
-                try {
-                    if (count == size) {
+            folder = (IMAPFolder)store.getFolder("INBOX");
+            folder.open(Folder.READ_ONLY);
+            int size = folder.getMessageCount();
+            System.out.println("数目： "+size);
+            Message[] mess=folder.getMessages();
+            int count = 1;
+            int retry_count = 0;
+            for (Message msg: mess) {
+                Thread.sleep(1000);
+                while (retry_count <= 20) {
+                    try {
+                        if (count == size) {
+                            break;
+                        }
+                        System.out.println("This is NO." + count + ":");
+                        String from = mess[count].getFrom()[0].toString();
+                        String subject = mess[count].getSubject();
+                        Date date = mess[count].getSentDate();
+                        System.out.println("Subject: " + subject);
+                        count ++;
                         break;
                     }
-                    System.out.println("This is NO." + count + ":");
-                    String from = mess[count].getFrom()[0].toString();
-                    String subject = mess[count].getSubject();
-                    Date date = mess[count].getSentDate();
-                    System.out.println("Subject: " + subject);
-                    count ++;
-                    break;
-                }
-                catch (Exception e) {
-                    Thread.sleep(2000);
-                    System.out.println(e);
+                    catch (Exception e) {
+                        Thread.sleep(2000);
+                        retry_count = retry_count + 1;
+                        System.out.println(e);
+                        System.out.println("get mail error, error mail NO." + count +" ,retry count is: " + retry_count);
+                    }
                 }
             }
         }
