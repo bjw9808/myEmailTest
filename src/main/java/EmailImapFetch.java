@@ -39,28 +39,24 @@ public class EmailImapFetch {
             int count = 1;
             int retry_count = 0;
             for (Message msg: mess) {
-                Thread.sleep(1000);
                 while (retry_count <= 20) {
                     try {
                         if (count == size) {
                             break;
                         }
                         System.out.println("This is NO." + count + ":");
-                        String from = mess[count].getFrom()[0].toString();
                         String subject = mess[count].getSubject();
-                        Date date = mess[count].getSentDate();
                         System.out.println("Subject: " + subject);
-                        count ++;
                         break;
                     }
                     catch (Exception e) {
-                        Thread.sleep(2000);
                         retry_count = retry_count + 1;
                         System.out.println(e);
                         System.out.println("get mail error, error mail NO." + count +" ,retry count is: " + retry_count);
                     }
                 }
                 retry_count = 0;
+                count ++;
             }
         }
     }
