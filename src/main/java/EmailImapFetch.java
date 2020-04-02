@@ -17,7 +17,6 @@ public class EmailImapFetch {
     private static Log logger = LogFactory.getLog(EmailImapFetch.class);
 
     public static void main(String[] args) throws Exception {
-        EmailImapFetch.databaseOperate("mail", "", "292215");
         logger.debug("The IMAP catcher plug-in unit start.");
         logger.debug("Args params: " + Arrays.toString(args));
 
@@ -91,6 +90,55 @@ public class EmailImapFetch {
                     }
                 }
             }
+        }
+    }
+}
+
+class DataBaseOperate {
+    private String JDBC_USER;
+    private String JDBC_PASSWORD;
+    private String JDBC_URL;
+    private Log logger;
+
+    public DataBaseOperate(String DB_NAME, String JDBC_USER, String JDBC_PASSWORD, Log logger) {
+        this.JDBC_USER = JDBC_USER;
+        this.JDBC_PASSWORD = JDBC_PASSWORD;
+        this.JDBC_URL = "jdbc:mysql://localhost:3306/" + DB_NAME + "?serverTimezone=UTC";
+        this.logger = logger;
+    }
+
+    public Statement connectDataBase() {
+        try {
+            Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+            Statement stmt = conn.createStatement();
+            logger.debug("connect database succeed!");
+            return stmt;
+        }
+        catch (Exception e) {
+            logger.debug("connect database failed, error msg: " + e);
+            return null;
+        }
+    }
+
+    public boolean executeSQL(String sql, Statement stmt) {
+        logger.debug("sql: " + sql);
+        try {
+            return stmt.execute(sql);
+        }
+        catch (Exception e) {
+            logger.debug("sql execute error, error msg: " + e);
+            return false;
+        }
+    }
+
+    public ResultSet executeSQLSelect(String sql, Statement stmt) {
+        logger.debug("sql: " + sql);
+        try {
+            return stmt.executeQuery(sql);
+        }
+        catch (Exception e) {
+            logger.debug("sql execute error, error msg: " + e);
+            return null;
         }
     }
 }
