@@ -1,3 +1,0 @@
-2020-04-02 19:13:55  [ main:0 ] - [ DEBUG ]  The IMAP catcher plug-in unit start.
-2020-04-02 19:13:55  [ main:5 ] - [ DEBUG ]  Args params: [imap.139.com, 993, 15102957670@139.com, Test2019]
-2020-04-02 19:14:06  [ main:10821 ] - [ DEBUG ]  Properties paras: {mail.imap.port=993, mail.imap.socketFactory.class=javax.net.ssl.SSLSocketFactory, mail.imap.host=imap.139.com, mail.imap.socketFactory.port=993, mail.imap.auth.login.disable=true, mail.store.protocol=imap}
